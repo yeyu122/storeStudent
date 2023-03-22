@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.storeStudent.Mapper.ProductMapper">
+    <resultMap id="ProductMap" type="cn.tedu.storeStudent.entity.Product">
+        <id column="id" property="id"/>
+        <result column="item_type" property="itemType"/>
+        <result column="title" property="title"/>
+        <result column="sell-point" property="sellPoint"/>
+        <result column="price" property="price"/>
+        <result column="num" property="num"/>
+        <result column="image" property="image"/>
+        <result column="status" property="status"/>
+        <result column="priority" property="priority"/>
+        <result column="created_user" property="createdUser"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="modified_user" property="modifiedUser"/>
+        <result column="modified_time" property="modifiedTime"/>
+        <association property="category" javaType="cn.tedu.storeStudent.entity.ProductCategory">
+            <id column="cid" property="id"/>
+            <result column="cPid" property="parentId"/>
+            <result column="cname" property="name"/>
+            <result column="cStatus" property="status"/>
+            <result column="cSortOrder" property="sortOrder"/>
+            <result column="cIsParent" property="isParent"/>
+        </association>
+    </resultMap>
+    <select id="listHotProduct" resultMap="ProductMap">
+        select
+            t1.*,t2.id as cid,t2.parent_id as cPid,t2.name as cname,
+            t2.status as cStatus,t2.sort_order as cSortOrder,t2.is_parent as cIsParent
+        from
+            t_product t1
+                join
+            t_product_category t2
+            on
+                t1.category_id = t2.id
+        where
+            t1.status=1 and t1.num>0
+        order by
+            priority desc
+            limit 0,4
+    </select>
+
+    <select id="getbyid" resultMap="ProductMap">
+        select
+            t1.*,t2.id as cid,t2.parent_id as cPid,t2.name as cname,
+            t2.status as cStatus,t2.sort_order as cSortOrder,t2.is_parent as cIsParent
+        from
+            t_product t1
+                join
+            t_product_category t2
+            on
+                t1.category_id = t2.id
+        where
+            t1.id=#{id}
+    </select>
+</mapper>

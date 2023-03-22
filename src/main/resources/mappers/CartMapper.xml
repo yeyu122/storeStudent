@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.storeStudent.Mapper.CartMapper">
+    <resultMap id="CartMapper" type="cn.tedu.storeStudent.entity.Cart">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId"/>
+        <result column="product_id" property="productId"/>
+        <result column="price" property="price"/>
+        <result column="num" property="num"/>
+        <result column="created_user" property="createdUser"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="modified_user" property="modifiedUser"/>
+        <result column="modified_time" property="modifiedTime"/>
+    </resultMap>
+<!--添加购物车信息-->
+    <insert id="insertCart">
+        insert into t_cart(user_id,product_id,price,num,created_user,created_time,modified_user,modified_time)
+        values(#{userId},#{productId},#{price},#{num},#{createdUser},#{createdTime},#{modifiedUser},#{modifiedTime});
+    </insert>
+    <select id="getByUidAndPid" resultMap="CartMapper">
+        select * from t_cart where user_id=#{uid} and product_id=#{pid}
+    </select>
+
+<!--    修改数量-->
+    <update id="UpdateNum">
+        update t_cart set num=#{num},modified_user=#{username},modified_time=#{modifiedTime}
+        where id=#{id}
+    </update>
+
+<!--    查询用户购物车-->
+    <select id="listCart" resultType="cn.tedu.storeStudent.entity.Cartvo">
+        select
+        t1.id as cid,t1.product_id as pid,t2.image,t2.title,t2.price as realPrice,t1.num,t1.price
+        from
+            t_cart t1
+        join
+            t_product t2
+        on
+            t1.product_id=t2.id
+        where
+            t1.user_id=#{uid}
+        order by
+            t1.modified_time desc;
+    </select>
+</mapper>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.storeStudent.Mapper.DistrictMapper">
+    <resultMap id="DistrictMapper" type="cn.tedu.storeStudent.entity.District">
+        <id column="id" property="id" />
+        <result column="parent" property="parent" />
+        <result column="code" property="code" />
+        <result column="name" property="name" />
+    </resultMap>
+<!--    基于编号查询省级信息-->
+    <select id="getCodeByName" resultType="java.lang.Integer">
+        select code from t_dict_district where name=#{name};
+    </select>
+<!--    基于父类编号查询-->
+    <select id="listByParent" resultMap="DistrictMapper">
+        select * from t_dict_district where parent=#{parent};
+    </select>
+</mapper>

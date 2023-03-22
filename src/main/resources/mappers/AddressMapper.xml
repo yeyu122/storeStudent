@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.storeStudent.Mapper.AddressMapper">
+    <resultMap id="AddressMap" type="cn.tedu.storeStudent.entity.Address">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="name" property="name" />
+        <result column="province_name" property="provinceName" />
+        <result column="province_code" property="provinceCode" />
+        <result column="city_name" property="cityName" />
+        <result column="city_code" property="cityCode" />
+        <result column="area_name" property="areaName" />
+        <result column="area_code" property="areaCode" />
+        <result column="zip" property="zip" />
+        <result column="address" property="address" />
+        <result column="phone" property="phone"/>
+        <result column="tel" property="tel" />
+        <result column="tag" property="tag" />
+        <result column="is_default" property="isDefault"/>
+        <result column="created_user" property="createdUser" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_user" property="modifiedUser" />
+        <result column="modified_time" property="modifiedTime" />
+    </resultMap>
+    <insert id="saveAddress">
+        insert into t_address(user_id,name,province_name,province_code,city_name,city_code,area_name,area_code,zip,address,
+        phone,tel,tag,is_default,created_user,created_time,modified_user,modified_time)
+        values(#{userId},#{name},#{provinceName},#{provinceCode},#{cityName},#{cityCode},#{areaName},#{areaCode},#{zip},#{address},
+        #{phone},#{tel},#{tag},#{isDefault},
+        #{createdUser},now(),#{modifiedUser},now());
+    </insert>
+    <!--  基于用户名查询用户收货地址条数信息 -->
+    <select id="countByUserId" resultType="java.lang.Integer">
+        select count(*) from t_address where user_id=#{userId};
+    </select>
+    <!--根据用户id查询收货地址-->
+    <select id="getAddressByUserId" resultMap="AddressMap">
+    select * from t_address where user_id=#{userId}
+    order by is_default desc,modified_time desc;
+    </select>
+    <delete id="deleteById">
+        delete from t_address where id=#{id}
+    </delete>
+    <update id="updateAddress">
+        UPDATE t_address
+        SET name = #{name},
+        province_name = #{provinceName},
+        province_code = #{provinceCode},
+        city_name = #{cityName},
+        city_code = #{cityCode},
+        area_name = #{areaName},
+        area_code = #{areaCode},
+        zip = #{zip},
+        address = #{address},
+        phone = #{phone},
+        tel = #{tel},
+        tag = #{tag},
+        is_default = #{isDefault},
+        modified_user = #{modifiedUser},
+        modified_time = now()
+        WHERE id = #{id};
+    </update>
+</mapper>
